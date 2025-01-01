@@ -15,3 +15,12 @@ create .gitignore file and add node_modules folder which will not be included in
 nodemon used to hot refresh the server without restarting the server
 You can replace nodemon instead use node --watch <filename> => server
 Server will restarting whan it observe changes
+
+In .env
+you developers will put google API keys (Private one) so it should not be included in GIT 
+so .env will be initialized in .gitignore file
+
+"scripts": {
+    "start": "node server",
+    "dev": "node --watch --env-file=.env server"
+  },

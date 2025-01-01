@@ -1,7 +1,10 @@
 const express = require('express');
 const path = require('path');
+const port = process.env.PORT || 8000;
 const app = express();
 
+// || 8000 is a fallback port if the environment variable is not set
+// will not use by default will end up with FALL BACK state you have to explictly mention in package.json
 // app is used in all to reute, create middleware, etc
 
 //setup static folder
@@ -11,8 +14,12 @@ app.use(express.static(path.join(__dirname, 'public'))); // __dirname is a globa
 // You no need to create routing for static files, express will automatically serve them
 //All you need to create project.html put URL project it will take care  of everything 
 
-app.listen(8000, () => {
-    console.log('Server is running on port 8000');
+app.listen(port, () => {
+    try {
+        console.log(`Server is running on port ${port}`);
+    } catch(err) {
+        console.log(err);
+    }
 })
 // added a callback function to the listen method to confirm that the server is running
 
@@ -31,3 +38,15 @@ app.get('/about', (req, res) => {
     //a way to load HTML files for single file this is ok for more large files you have to use middleware
 })
 //This res object has a method calld dend file
+
+
+let post = [
+    {id: 1, title: 'Post 1'},
+    {id: 2, title: 'Post 2'},
+    {id: 3, title: 'Post 3'}
+];
+app.get('/api/post', (req, res) => {
+    //res.send(post); can be also used 
+    res.json(post);
+    //you can hit this end point to your react application to serve data
+})
