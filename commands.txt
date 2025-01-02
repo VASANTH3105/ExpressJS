@@ -35,3 +35,11 @@ app.use(express.json());// This allows app to post json data to it
 app.use(express.urlencoded({ extended: false }));// This allows app to post url encoded data to it
 For example, in a POST or PUT request with Content-Type: application/json.
 Converts raw JSON payloads into a JavaScript object.
+
+
+Custom Error handling and catching all errors in middleware
+app.use((err, req, res, next) => {
+  
+})
+
+then gone into colors package and installed it

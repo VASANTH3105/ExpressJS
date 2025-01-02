@@ -6,18 +6,19 @@ const app = express();
 
 //AFTER Changing "type": "module" in package.json
 //you can use import instead of require
-import express from 'express';
-import path from 'path';
-import post from './routes/post.js';//if it's a file you have to use it's extension
-import logger from './middleware/logger.js'
-import errorHandler from './middleware/error.js'
+import express from "express";
+import path from "path";
+import post from "./routes/post.js"; //if it's a file you have to use it's extension
+import logger from "./middleware/logger.js";
+import errorHandler from "./middleware/error.js";
+import notFound from "./middleware/notFound.js";
 // || 8000 is a fallback port if the environment variable is not set
 // will not use by default will end up with FALL BACK state you have to explictly mention in package.json
 // app is used in all to reute, create middleware, etc
 
 //Middleware - functions that have access to the request object, the response object, and the next middleware function in the application’s request-response cycle.
-app.use(express.json());// This allows app to post json data to it
-app.use(express.urlencoded({ extended: false }));// This allows app to post url encoded data to it
+app.use(express.json()); // This allows app to post json data to it
+app.use(express.urlencoded({ extended: false })); // This allows app to post url encoded data to it
 
 //Logger middleware
 app.use(logger);
@@ -28,7 +29,6 @@ app.use(logger);
 // express.static is used to serve static files such as images, css, and javascript files
 // You no need to create routing for static files, express will automatically serve them
 //All you need to create project.html put URL project it will take care  of everything
-
 
 /*
 //get endpoint first argument is the path, second argument is a callback function with
@@ -49,7 +49,6 @@ app.get("/about", (req, res) => {
 
 */
 
-
 /*
 In this you can yous app. because you have access to app in this file
 //Get single post
@@ -67,19 +66,18 @@ app.get("/api/post/:id", (req, res) => {
 });
 */
 
-
 //After importing Reoutes
-app.use('/api/post', post);
+app.use("/api/post", post);
 //If you are using //api/post you need not to use this end point in Routes
 
+app.use(notFound);
 app.use(errorHandler);
 
 app.listen(port, () => {
-    try {
-      console.log(`Server is running on port ${port}`);
-    } catch (err) {
-      console.log(err);
-    }
-  });
-  // added a callback function to the listen method to confirm that the server is running
-  
+  try {
+    console.log(`Server is running on port ${port}`);
+  } catch (err) {
+    console.log(err);
+  }
+});
+// added a callback function to the listen method to confirm that the server is running
