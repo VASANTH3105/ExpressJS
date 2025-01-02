@@ -1,28 +1,32 @@
-const express = require("express");
-const path = require("path");
+// const express = require("express");
+// const path = require("path");
+// const post = require('./routes/post');
 const port = process.env.PORT || 8000;
 const app = express();
+
+//AFTER Changing "type": "module" in package.json
+//you can use import instead of require
+import express from 'express';
+import path from 'path';
+import post from './routes/post.js';//if it's a file you have to use it's extension
 
 // || 8000 is a fallback port if the environment variable is not set
 // will not use by default will end up with FALL BACK state you have to explictly mention in package.json
 // app is used in all to reute, create middleware, etc
 
+//Middleware - functions that have access to the request object, the response object, and the next middleware function in the application’s request-response cycle.
+app.use(express.json());// This allows app to post json data to it
+app.use(express.urlencoded({ extended: false }));// This allows app to post url encoded data to it
+
 //setup static folder
-app.use(express.static(path.join(__dirname, "public"))); // __dirname is a global variable that gives the current directory name
+//app.use(express.static(path.join(__dirname, "public"))); // __dirname is a global variable that gives the current directory name
 // path.join is used to join the current directory name with the public folder
 // express.static is used to serve static files such as images, css, and javascript files
 // You no need to create routing for static files, express will automatically serve them
 //All you need to create project.html put URL project it will take care  of everything
 
-app.listen(port, () => {
-  try {
-    console.log(`Server is running on port ${port}`);
-  } catch (err) {
-    console.log(err);
-  }
-});
-// added a callback function to the listen method to confirm that the server is running
 
+/*
 //get endpoint first argument is the path, second argument is a callback function with
 //two parameters, req and res
 app.get("/", (req, res) => {
@@ -39,30 +43,11 @@ app.get("/about", (req, res) => {
 });
 //This res object has a method calld dend file
 
-let post = [
-  { id: 1, title: "Post 1" },
-  { id: 2, title: "Post 2" },
-  { id: 3, title: "Post 3" },
-];
+*/
 
-//Get all post
-app.get("/api/post", (req, res) => {
-  //res.send(post); can be also used
-  console.log(req.query);
-
-  //setting limit
-  const limit = parseInt(req.query.limit);
-  if(!isNaN(limit) && limit > 0) {
-    //By caution on SQL Injection in Query parameter
-    res.status(200).json(post.slice(0, limit));
-  } else {
-    res.status(200).json(post);
-  }
-  res.json(post);
-  //you can hit this end point to your react application to serve data
-});
 
 /*
+In this you can yous app. because you have access to app in this file
 //Get single post
 app.get("/api/post/:id", (req, res) => {
   //id will basically an object and be in string type
@@ -77,12 +62,19 @@ app.get("/api/post/:id", (req, res) => {
   }
 });
 */
-app.get('/api/post/:id', (req, res) => {
-    const id = parseInt(req.params.id);
-    const postFind = post.find((post) => post.id === id);
-    if(!postFind) {
-        res.status(404).json({ message: `A post with ${id} is not found...!`});
-    } else {
-        res.status(200).json(postFind);
+
+
+//After importing Reoutes
+app.use('/api/post', post);
+//If you are using //api/post you need not to use this end point in Routes
+
+
+app.listen(port, () => {
+    try {
+      console.log(`Server is running on port ${port}`);
+    } catch (err) {
+      console.log(err);
     }
-})
+  });
+  // added a callback function to the listen method to confirm that the server is running
+  

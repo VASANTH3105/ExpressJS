@@ -24,3 +24,14 @@ so .env will be initialized in .gitignore file
     "start": "node server",
     "dev": "node --watch --env-file=.env server"
   },
+
+note all endpoints are user in Routes instead of using app.get() in server.js
+We used router.get and exported it in server.js
+
+in package.json "type": "module", => we can use import and export instead of require and module.exports
+so that we can use ES6 modules but what issue faced here is that __dirname is not working in ES6 modules
+
+app.use(express.json());// This allows app to post json data to it
+app.use(express.urlencoded({ extended: false }));// This allows app to post url encoded data to it
+For example, in a POST or PUT request with Content-Type: application/json.
+Converts raw JSON payloads into a JavaScript object.
