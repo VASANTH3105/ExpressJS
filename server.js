@@ -4,10 +4,17 @@
 const port = process.env.PORT || 8000;
 const app = express();
 
+//Get the directory name
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+console.log(__filename);
+
+
 //AFTER Changing "type": "module" in package.json
 //you can use import instead of require
 import express from "express";
 import path from "path";
+import { fileURLToPath } from "url"; 
 import post from "./routes/post.js"; //if it's a file you have to use it's extension
 import logger from "./middleware/logger.js";
 import errorHandler from "./middleware/error.js";
@@ -24,7 +31,7 @@ app.use(express.urlencoded({ extended: false })); // This allows app to post url
 app.use(logger);
 
 //setup static folder
-//app.use(express.static(path.join(__dirname, "public"))); // __dirname is a global variable that gives the current directory name
+app.use(express.static(path.join(__dirname, "public"))); // __dirname is a global variable that gives the current directory name
 // path.join is used to join the current directory name with the public folder
 // express.static is used to serve static files such as images, css, and javascript files
 // You no need to create routing for static files, express will automatically serve them
