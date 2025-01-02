@@ -9,8 +9,9 @@ let post = [
   { id: 3, title: "Post 3" },
 ];
 
-//Get all post
 
+
+//Get all post
 router.get("/", (req, res) => {
   //res.send(post); can be also used
   console.log(req.query);
@@ -23,20 +24,26 @@ router.get("/", (req, res) => {
   } else {
     res.status(200).json(post);
   }
-  res.json(post);
+  //res.json(post);
   //you can hit this end point to your react application to serve data
 });
 
 
 //Here you don't have  access to app only way to handle this to use Router
-router.get("/:id", (req, res) => {
+router.get("/:id", (req, res, next) => {
   const id = parseInt(req.params.id);
   const postFind = post.find((post) => post.id === id);
   if (!postFind) {
     //Just little optimization
+    /*
     return res
       .status(404)
       .json({ message: `A post with ${id} is not found...!` });
+      */
+     //Custom Error Handler
+     const error = new Error(`A post with ${id} is not found...!`);
+     error.status = 404;
+     return next(error);
   } else {
     res.status(200).json(postFind);
   }
@@ -60,6 +67,41 @@ router.post('/', (req, res) => {
     // Respond with the updated post list
     res.status(201).json(post);
 });
+
+// Update POST
+router.put('/:id', (req, res) => {
+    const id = parseInt(req.params.id);
+    const postFind = post.find((post) => post.id === id);
+
+    if (!postFind) {
+        return res
+            .status(404)
+            .json({ message: `A post with id ${id} is not found...!` });
+    }
+
+    // Update the title from the request body
+    if (req.body.title) {
+        postFind.title = req.body.title;
+    }
+
+    res.status(200).json(post); 
+});
+
+//Delete POST
+router.delete('/:id', (req, res) => {
+    const id = parseInt(req.params.id);
+    const postFind = post.find((post) => post.id === id);
+
+    if(!postFind) {
+        return res
+            .status(404)
+            .json({ message: `A post with id ${id} is not found...!` });
+    }
+
+    post = post.filter((post) => post.id !== id);
+    res.status(200).json(post);
+
+})
 
 //We are using common Js so use module.exports
 export default router;

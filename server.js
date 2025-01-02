@@ -9,7 +9,8 @@ const app = express();
 import express from 'express';
 import path from 'path';
 import post from './routes/post.js';//if it's a file you have to use it's extension
-
+import logger from './middleware/logger.js'
+import errorHandler from './middleware/error.js'
 // || 8000 is a fallback port if the environment variable is not set
 // will not use by default will end up with FALL BACK state you have to explictly mention in package.json
 // app is used in all to reute, create middleware, etc
@@ -17,6 +18,9 @@ import post from './routes/post.js';//if it's a file you have to use it's extens
 //Middleware - functions that have access to the request object, the response object, and the next middleware function in the application’s request-response cycle.
 app.use(express.json());// This allows app to post json data to it
 app.use(express.urlencoded({ extended: false }));// This allows app to post url encoded data to it
+
+//Logger middleware
+app.use(logger);
 
 //setup static folder
 //app.use(express.static(path.join(__dirname, "public"))); // __dirname is a global variable that gives the current directory name
@@ -68,6 +72,7 @@ app.get("/api/post/:id", (req, res) => {
 app.use('/api/post', post);
 //If you are using //api/post you need not to use this end point in Routes
 
+app.use(errorHandler);
 
 app.listen(port, () => {
     try {
