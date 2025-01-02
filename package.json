@@ -9,7 +9,7 @@
     "dev": "nodemon --env-file=.env server"
   },
   "keywords": [],
-  "author": "",
+  "author": "VASANTH S",
   "license": "ISC",
   "dependencies": {
     "colors": "^1.4.0",
